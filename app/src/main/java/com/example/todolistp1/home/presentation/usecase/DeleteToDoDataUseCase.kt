@@ -1,7 +1,7 @@
 package com.example.todolistp1.home.presentation.usecase
 
-import com.example.todolistp1.home.presentation.model.ToDoCardData
+import com.example.todolistp1.home.domain.model.ToDoListItem
 
 interface DeleteToDoDataUseCase {
-    fun deleteToDo(toDoCardData: ToDoCardData): Boolean
+    suspend operator fun invoke(toDoListItem: ToDoListItem): Int
 }

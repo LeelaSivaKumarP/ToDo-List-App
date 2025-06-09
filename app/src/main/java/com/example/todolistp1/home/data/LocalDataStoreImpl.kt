@@ -1,21 +1,24 @@
 package com.example.todolistp1.home.data
 
-import com.example.todolistp1.home.domain.LocalDataStore
+import com.example.todolistp1.home.data.localdb.MyDao
+import com.example.todolistp1.home.data.localdb.ToDoItemDBModel
+import javax.inject.Inject
 
-class LocalDataStoreImpl: LocalDataStore {
-    override suspend fun insertData() {
-        TODO("Not yet implemented")
+class LocalDataStoreImpl @Inject constructor(val myDao: MyDao): LocalDataStore {
+
+    override suspend fun insertData(toDoItemDBModel: ToDoItemDBModel): Int {
+        myDao.addToDB(toDoItemDBModel)
+        return 1
     }
 
-    override suspend fun fetchData() {
-        TODO("Not yet implemented")
+    override suspend fun fetchData() = myDao.fetchFromDB()
+
+    override suspend fun updateData(toDoItemDBModel: ToDoItemDBModel): Int {
+        myDao.addToDB(toDoItemDBModel)
+        return 1
     }
 
-    override suspend fun deleteData() {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun updateData() {
-        TODO("Not yet implemented")
+    override suspend fun deleteData(toDoItemDBModel: ToDoItemDBModel): Int {
+        return myDao.deleteFromDB(toDoItemDBModel.id)
     }
 }

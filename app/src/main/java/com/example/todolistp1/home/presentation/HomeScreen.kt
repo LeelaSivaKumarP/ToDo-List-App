@@ -4,28 +4,19 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.InlineTextContent
-import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,7 +28,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -49,25 +39,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.Placeholder
-import androidx.compose.ui.text.PlaceholderVerticalAlign
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.todolistp1.R
 import com.example.todolistp1.home.presentation.model.ToDoCardData
 import com.example.todolistp1.ui.theme.TODOListP1Theme
-import kotlinx.coroutines.flow.asStateFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: HomeViewModel, modifier: Modifier = Modifier) {
+fun HomeScreen(viewModel: HomeViewModel = viewModel(), modifier: Modifier = Modifier) {
     val data by viewModel.uiState.collectAsState()
     Scaffold(
         floatingActionButton = { CustomFloatingActionButton() },
@@ -152,8 +133,8 @@ fun HomeContentScreen(todoData: List<ToDoCardData>, onCheckChanged: (ToDoCardDat
     LazyColumn(modifier = modifier
         .fillMaxSize()
         .background(MaterialTheme.colorScheme.background),
-        contentPadding = PaddingValues(5.dp),
-        verticalArrangement = Arrangement.spacedBy(5.dp)
+        contentPadding = PaddingValues(all = 5.dp),
+        verticalArrangement = Arrangement.spacedBy(space = 5.dp)
     ) {
         items(todoData) {
             ToDoItemCard(it.isChecked,{ newVal -> onCheckChanged(it, newVal) }, title = it.title, description = it.dateTime, repeatMode = it.repeatMode, category = it.category)
@@ -165,7 +146,7 @@ fun HomeContentScreen(todoData: List<ToDoCardData>, onCheckChanged: (ToDoCardDat
 @Composable
 fun PreviewHomeScreen(modifier: Modifier = Modifier) {
     TODOListP1Theme {
-        HomeScreen(HomeViewModel())
+        HomeScreen()
     }
 }
 

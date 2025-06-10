@@ -42,16 +42,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.todolistp1.R
 import com.example.todolistp1.home.presentation.model.ToDoCardData
 import com.example.todolistp1.ui.theme.TODOListP1Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = viewModel(), modifier: Modifier = Modifier) {
+fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewModel(), modifier: Modifier = Modifier) {
     val data by viewModel.uiState.collectAsState()
     Scaffold(
-        floatingActionButton = { CustomFloatingActionButton() },
+        floatingActionButton = { CustomFloatingActionButton(navController) },
         topBar = { CustomTopAppBar() },
         modifier = modifier.fillMaxSize()
     ) { padding ->
@@ -115,9 +117,9 @@ fun CustomTopAppBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun CustomFloatingActionButton(modifier: Modifier = Modifier) {
+fun CustomFloatingActionButton(navController: NavController, modifier: Modifier = Modifier) {
     FloatingActionButton(
-        onClick = {/*TODO: Navigation part*/},
+        onClick = { navController.navigate("Two") },
         modifier = Modifier.clip(CircleShape)
     ) {
         Icon(
@@ -144,9 +146,9 @@ fun HomeContentScreen(todoData: List<ToDoCardData>, onCheckChanged: (ToDoCardDat
 
 @Preview(showSystemUi = true)
 @Composable
-fun PreviewHomeScreen(modifier: Modifier = Modifier) {
+fun PreviewHomeScreen(navController: NavController = rememberNavController(), modifier: Modifier = Modifier) {
     TODOListP1Theme {
-        HomeScreen()
+        HomeScreen(navController)
     }
 }
 

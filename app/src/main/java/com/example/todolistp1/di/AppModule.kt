@@ -1,11 +1,11 @@
 package com.example.todolistp1.di
 
 import android.content.Context
-import com.example.todolistp1.home.data.LocalDataStore
-import com.example.todolistp1.home.data.LocalDataStoreImpl
-import com.example.todolistp1.home.data.ToDoListRepositoryImpl
-import com.example.todolistp1.home.data.localdb.MyRoomDB
-import com.example.todolistp1.home.domain.ToDoListRepository
+import com.example.todolistp1.data.LocalDataStore
+import com.example.todolistp1.data.LocalDataStoreImpl
+import com.example.todolistp1.data.ToDoListRepositoryImpl
+import com.example.todolistp1.data.localdb.MyRoomDB
+import com.example.todolistp1.domain.ToDoListRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,10 +29,12 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideLocalDataStore(localDataStoreImpl: LocalDataStoreImpl): LocalDataStore = localDataStoreImpl
+    fun provideLocalDataStore(localDataStoreImpl: LocalDataStoreImpl): LocalDataStore =
+        localDataStoreImpl
 
     @Singleton
     @Provides
-    fun provideToDoListRepository(toDoListRepositoryImpl: ToDoListRepositoryImpl): ToDoListRepository = toDoListRepositoryImpl
+    fun provideToDoListRepository(toDoListRepositoryImpl: ToDoListRepositoryImpl): ToDoListRepository =
+        toDoListRepositoryImpl
 
 }

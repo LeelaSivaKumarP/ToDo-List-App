@@ -1,10 +1,10 @@
-package com.example.todolistp1.home.data
+package com.example.todolistp1.data
 
-import com.example.todolistp1.home.data.localdb.MyDao
-import com.example.todolistp1.home.data.localdb.ToDoItemDBModel
+import com.example.todolistp1.data.localdb.MyDao
+import com.example.todolistp1.data.localdb.ToDoItemDBModel
 import javax.inject.Inject
 
-class LocalDataStoreImpl @Inject constructor(val myDao: MyDao): LocalDataStore {
+class LocalDataStoreImpl @Inject constructor(val myDao: MyDao) : LocalDataStore {
 
     override suspend fun insertData(toDoItemDBModel: ToDoItemDBModel): Int {
         myDao.addToDB(toDoItemDBModel)

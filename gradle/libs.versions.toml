@@ -17,6 +17,9 @@ appcompat = "1.7.1"
 material = "1.12.0"
 activity = "1.10.1"
 constraintlayout = "2.2.1"
+kotlin-serialization-version = "1.7.3"
+serialization-plugin-version = "1.9.0"
+constraintlayout-compose-version = "1.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -44,6 +47,8 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+kotlin-serializatin = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlin-serialization-version" }
+androidx-constraintlayout-compose = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayout-compose-version" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -51,5 +56,6 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp-plugin = { id = "com.google.devtools.ksp", version.ref = "ksp-plugin-version" }
 hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt-version"}
+serialization-plugin = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serialization-plugin-version" }
 
 

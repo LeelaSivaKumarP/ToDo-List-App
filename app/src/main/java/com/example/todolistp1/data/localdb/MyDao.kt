@@ -1,9 +1,10 @@
-package com.example.todolistp1.home.data.localdb
+package com.example.todolistp1.data.localdb
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MyDao {
@@ -14,5 +15,5 @@ interface MyDao {
     suspend fun deleteFromDB(id: Int): Int
 
     @Query("Select * from todo_items")
-    suspend fun fetchFromDB(): List<ToDoItemDBModel>
+    fun fetchFromDB(): Flow<List<ToDoItemDBModel>>
 }

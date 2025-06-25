@@ -1,4 +1,4 @@
-package com.example.todolistp1.home.data.localdb
+package com.example.todolistp1.data.localdb
 
 import android.content.Context
 import androidx.room.Database
@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(entities = [ToDoItemDBModel::class], version = 1, exportSchema = false)
-abstract class MyRoomDB: RoomDatabase() {
+abstract class MyRoomDB : RoomDatabase() {
 
     companion object {
         val DB_NAME = "MYDB"
@@ -14,5 +14,6 @@ abstract class MyRoomDB: RoomDatabase() {
             return Room.databaseBuilder(context, MyRoomDB::class.java, DB_NAME).build()
         }
     }
+
     abstract fun myDao(): MyDao
 }

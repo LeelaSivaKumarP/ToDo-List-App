@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp.plugin)
     alias(libs.plugins.hilt.plugin)
+    alias(libs.plugins.serialization.plugin)
 }
 
 android {
@@ -62,6 +63,8 @@ dependencies {
     ksp(libs.room.compiler)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.compose.navigation)
+    implementation(libs.kotlin.serializatin)
+    implementation(libs.androidx.constraintlayout.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -1,4 +1,4 @@
-package com.example.todolistp1.home.presentation
+package com.example.todolistp1.home
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -41,23 +42,39 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.todolistp1.R
-import com.example.todolistp1.home.presentation.model.ToDoCardData
+import com.example.todolistp1.addtask.AddItemScreen
+import com.example.todolistp1.presentation.ToDoItemCard
+import com.example.todolistp1.presentation.model.ToDoCardData
 import com.example.todolistp1.ui.theme.TODOListP1Theme
+import kotlinx.serialization.Serializable
+
+@Serializable
+object HomeScreenNavArg
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewModel(), modifier: Modifier = Modifier) {
+fun HomeScreen(
+    navController: NavController,
+    viewModel: HomeViewModel = viewModel(),
+    modifier: Modifier = Modifier
+) {
     val data by viewModel.uiState.collectAsState()
     Scaffold(
         floatingActionButton = { CustomFloatingActionButton(navController) },
         topBar = { CustomTopAppBar() },
         modifier = modifier.fillMaxSize()
     ) { padding ->
-        HomeContentScreen(data, viewModel::changeStateOfCard, modifier = Modifier.padding(padding))
+        HomeContentScreen(
+            data,
+            viewModel::changeStateOfCard,
+            viewModel::deleteCard,
+            modifier = Modifier.padding(padding)
+        )
     }
 }
 
@@ -66,8 +83,10 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = viewMode
 @Composable
 fun CustomTopAppBar(modifier: Modifier = Modifier) {
     var exp by remember { mutableStateOf(false) }
-    Box(contentAlignment = Alignment.TopCenter, modifier = modifier
-        .background(Color.Green)) {
+    Box(
+        contentAlignment = Alignment.TopCenter, modifier = modifier
+            .background(Color.Green)
+    ) {
         TopAppBar(
             title = {
                 Row {
@@ -91,7 +110,10 @@ fun CustomTopAppBar(modifier: Modifier = Modifier) {
                     onDismissRequest = { exp = false },
 
                     ) {
-                    DropdownMenuItem(text = { Text("Text1") }, leadingIcon = { Icon(Icons.Default.AccountBox, contentDescription = null)}, onClick = { /* Handle click */ })
+                    DropdownMenuItem(
+                        text = { Text("Text1") },
+                        leadingIcon = { Icon(Icons.Default.AccountBox, contentDescription = null) },
+                        onClick = { /* Handle click */ })
                     DropdownMenuItem(text = { Text("Text2") }, onClick = { /* Handle click */ })
                     DropdownMenuItem(text = { Text("Text3") }, onClick = { /* Handle click */ })
                     DropdownMenuItem(text = { Text("Text4") }, onClick = { /* Handle click */ })
@@ -119,7 +141,7 @@ fun CustomTopAppBar(modifier: Modifier = Modifier) {
 @Composable
 fun CustomFloatingActionButton(navController: NavController, modifier: Modifier = Modifier) {
     FloatingActionButton(
-        onClick = { navController.navigate("Two") },
+        onClick = { navController.navigate(AddItemScreen) },
         modifier = Modifier.clip(CircleShape)
     ) {
         Icon(
@@ -131,24 +153,52 @@ fun CustomFloatingActionButton(navController: NavController, modifier: Modifier 
 }
 
 @Composable
-fun HomeContentScreen(todoData: List<ToDoCardData>, onCheckChanged: (ToDoCardData, Boolean)-> Unit, modifier: Modifier = Modifier) {
-    LazyColumn(modifier = modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colorScheme.background),
-        contentPadding = PaddingValues(all = 5.dp),
-        verticalArrangement = Arrangement.spacedBy(space = 5.dp)
-    ) {
-        items(todoData) {
-            ToDoItemCard(it.isChecked,{ newVal -> onCheckChanged(it, newVal) }, title = it.title, description = it.dateTime, repeatMode = it.repeatMode, category = it.category)
+fun HomeContentScreen(
+    homeState: HomeState,
+    onCheckChanged: (ToDoCardData, Boolean) -> Unit,
+    onDeleteButtonClick: (ToDoCardData) -> Unit,
+    modifier: Modifier = Modifier
+) {
+
+    if (homeState.isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+    } else if (homeState.isError) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("Error", color = Color.Red, fontSize = 20.sp)
+        }
+    } else {
+        LazyColumn(
+            modifier = modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
+            contentPadding = PaddingValues(all = 5.dp),
+            verticalArrangement = Arrangement.spacedBy(space = 5.dp)
+        ) {
+            items(homeState.data) {
+                ToDoItemCard(
+                    it.isChecked,
+                    { newVal -> onCheckChanged(it, newVal) },
+                    { onDeleteButtonClick(it) },
+                    title = it.title,
+                    description = it.dateTime,
+                    repeatMode = it.repeatMode,
+                    category = it.category
+                )
+            }
         }
     }
 }
 
 @Preview(showSystemUi = true)
 @Composable
-fun PreviewHomeScreen(navController: NavController = rememberNavController(), modifier: Modifier = Modifier) {
+fun PreviewHomeScreen(
+    navController: NavController = rememberNavController(),
+    modifier: Modifier = Modifier
+) {
     TODOListP1Theme {
-        HomeScreen(navController)
+        HomeScreen(navController, modifier = modifier)
     }
 }
 
@@ -157,8 +207,9 @@ fun PreviewHomeScreen(navController: NavController = rememberNavController(), mo
 fun PreviewHomeContentScreen(modifier: Modifier = Modifier) {
     TODOListP1Theme {
         HomeContentScreen(
-            dummyUIStateData(),
-            onCheckChanged = {a,b -> Log.d("TAG", "PreviewHomeContentScreen: $a $b")}
+            HomeState(isLoading = false, isError = false, data = dummyUIStateData()),
+            onCheckChanged = { a, b -> Log.d("TAG", "PreviewHomeContentScreen: $a $b") },
+            onDeleteButtonClick = { Log.d("TAG", "PreviewHomeContentScreen: $it") }
         )
     }
 }

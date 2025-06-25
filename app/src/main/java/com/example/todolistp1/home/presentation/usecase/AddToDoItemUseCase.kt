@@ -1,7 +1,0 @@
-package com.example.todolistp1.home.presentation.usecase
-
-import com.example.todolistp1.home.domain.model.ToDoListItem
-
-interface AddToDoItemUseCase {
-    suspend operator fun invoke(toDoCardData: ToDoListItem): Int
-}

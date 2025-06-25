@@ -1,4 +1,4 @@
-package com.example.todolistp1.home.data.localdb
+package com.example.todolistp1.data.localdb
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

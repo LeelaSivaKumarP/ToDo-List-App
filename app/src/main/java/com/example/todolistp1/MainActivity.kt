@@ -4,25 +4,24 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.sp
+import androidx.activity.viewModels
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.dialog
+
 import androidx.navigation.compose.rememberNavController
-import com.example.todolistp1.home.presentation.HomeScreen
+import com.example.todolistp1.addtask.AddItemScreen
+import com.example.todolistp1.addtask.AddItemViewModel
+import com.example.todolistp1.home.HomeScreen
+import com.example.todolistp1.home.HomeScreenNavArg
+import com.example.todolistp1.home.HomeViewModel
 import com.example.todolistp1.ui.theme.TODOListP1Theme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    val homeViewModel: HomeViewModel by viewModels<HomeViewModel>()
+    val addViewModel: AddItemViewModel by viewModels<AddItemViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,18 +30,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             TODOListP1Theme {
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = "One") {
-                    composable(route = "One") {
-                        HomeScreen(navController)
+                NavHost(navController = navController, startDestination = HomeScreenNavArg) {
+                    composable<HomeScreenNavArg> {
+                        HomeScreen(navController, homeViewModel)
                     }
-                    composable(route = "Two") {
-                        Text(text = "Two, The second screen.", style = TextStyle.Default.copy(fontSize = 32.sp))
-                    }
-                    dialog("Dialog") {
-                        Box(modifier = Modifier.fillMaxSize(0.3f).background(Color.White), contentAlignment = Alignment.Center) {
-                            Text(text = "This should be displayed in dialog.")
-                        }
 
+                    composable<AddItemScreen> {
+                        AddItemScreen(navController, viewModel = addViewModel)
                     }
                 }
 

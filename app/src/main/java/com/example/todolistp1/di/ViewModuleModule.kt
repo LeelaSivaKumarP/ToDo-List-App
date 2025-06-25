@@ -1,13 +1,13 @@
 package com.example.todolistp1.di
 
-import com.example.todolistp1.home.domain.usecase.AddToDoItemUseCaseImpl
-import com.example.todolistp1.home.domain.usecase.DeleteToDoListUseCaseImpl
-import com.example.todolistp1.home.domain.usecase.FetchToDoDataUseCaseImpl
-import com.example.todolistp1.home.domain.usecase.ModifyToDoDataUseCaseImpl
-import com.example.todolistp1.home.presentation.usecase.AddToDoItemUseCase
-import com.example.todolistp1.home.presentation.usecase.DeleteToDoDataUseCase
-import com.example.todolistp1.home.presentation.usecase.FetchToDoDataUseCase
-import com.example.todolistp1.home.presentation.usecase.ModifyToDoDataUseCase
+import com.example.todolistp1.domain.usecase.AddToDoItemUseCaseImpl
+import com.example.todolistp1.domain.usecase.DeleteToDoListUseCaseImpl
+import com.example.todolistp1.domain.usecase.FetchToDoDataUseCaseImpl
+import com.example.todolistp1.domain.usecase.ModifyToDoDataUseCaseImpl
+import com.example.todolistp1.presentation.usecase.AddToDoItemUseCase
+import com.example.todolistp1.presentation.usecase.DeleteToDoDataUseCase
+import com.example.todolistp1.presentation.usecase.FetchToDoDataUseCase
+import com.example.todolistp1.presentation.usecase.UpdateToDoDataUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -25,7 +25,7 @@ abstract class ViewModuleModule {
     abstract fun providesDeleteToDoItemUSeCase(deleteToDoItemUseCaseImpl: DeleteToDoListUseCaseImpl): DeleteToDoDataUseCase
 
     @Binds
-    abstract fun providesModifyToDoDataUseCase(modifyToDoDataUseCaseImpl: ModifyToDoDataUseCaseImpl): ModifyToDoDataUseCase
+    abstract fun providesModifyToDoDataUseCase(modifyToDoDataUseCaseImpl: ModifyToDoDataUseCaseImpl): UpdateToDoDataUseCase
 
     @Binds
     abstract fun providesFetchToDoItemUSeCase(fetchToDoDataUseCaseImpl: FetchToDoDataUseCaseImpl): FetchToDoDataUseCase

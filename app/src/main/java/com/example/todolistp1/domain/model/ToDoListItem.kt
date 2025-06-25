@@ -1,9 +1,9 @@
-package com.example.todolistp1.home.domain.model
+package com.example.todolistp1.domain.model
 
-import com.example.todolistp1.home.data.localdb.ToDoItemDBModel
+import com.example.todolistp1.data.localdb.ToDoItemDBModel
 
 data class ToDoListItem(
-    val id: Int,
+    val id: Int = 0,
     var isChecked: Boolean,
     val title: String,
     var dateTime: String? = null,
@@ -19,16 +19,22 @@ fun ToDoListItem.toData(): ToDoItemDBModel {
         dateTime = this.dateTime,
         repeatMode = this.repeatMode,
         category = this.category
-        )
+    )
 }
 
 fun ToDoItemDBModel.toDomain(): ToDoListItem {
     return ToDoListItem(
         id = this.id,
-        isChecked =  this.isChecked,
+        isChecked = this.isChecked,
         title = this.title,
         dateTime = this.dateTime,
         repeatMode = this.repeatMode,
         category = this.category
     )
+}
+
+fun List<ToDoItemDBModel>.toDomainList(): List<ToDoListItem> {
+    return this.map {
+        it.toDomain()
+    }
 }

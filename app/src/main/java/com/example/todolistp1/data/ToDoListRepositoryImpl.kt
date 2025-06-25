@@ -1,10 +1,11 @@
-package com.example.todolistp1.home.data
+package com.example.todolistp1.data
 
-import com.example.todolistp1.home.data.localdb.ToDoItemDBModel
-import com.example.todolistp1.home.domain.ToDoListRepository
+import com.example.todolistp1.data.localdb.ToDoItemDBModel
+import com.example.todolistp1.domain.ToDoListRepository
 import javax.inject.Inject
 
-class ToDoListRepositoryImpl @Inject constructor(val localDataStoreImpl: LocalDataStore): ToDoListRepository {
+class ToDoListRepositoryImpl @Inject constructor(val localDataStoreImpl: LocalDataStore) :
+    ToDoListRepository {
 
     override suspend fun getToDoListData() = localDataStoreImpl.fetchData()
 

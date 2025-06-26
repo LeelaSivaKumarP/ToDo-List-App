@@ -43,29 +43,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.todolistp1.R
-import com.example.todolistp1.addtask.AddItemScreen
-import com.example.todolistp1.presentation.ToDoItemCard
 import com.example.todolistp1.presentation.model.ToDoCardData
 import com.example.todolistp1.ui.theme.TODOListP1Theme
-import kotlinx.serialization.Serializable
 
-@Serializable
-object HomeScreenNavArg
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    navController: NavController,
-    viewModel: HomeViewModel = viewModel(),
+    onAddTaskButtonClick: () -> Unit,
+    onClickToDoCard: () -> Unit,
+    viewModel: HomeViewModel = hiltViewModel<HomeViewModel>(),
     modifier: Modifier = Modifier
 ) {
     val data by viewModel.uiState.collectAsState()
     Scaffold(
-        floatingActionButton = { CustomFloatingActionButton(navController) },
+        floatingActionButton = { CustomFloatingActionButton(onAddTaskButtonClick) },
         topBar = { CustomTopAppBar() },
         modifier = modifier.fillMaxSize()
     ) { padding ->
@@ -73,6 +69,7 @@ fun HomeScreen(
             data,
             viewModel::changeStateOfCard,
             viewModel::deleteCard,
+            onClickToDoCard,
             modifier = Modifier.padding(padding)
         )
     }
@@ -139,9 +136,9 @@ fun CustomTopAppBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun CustomFloatingActionButton(navController: NavController, modifier: Modifier = Modifier) {
+fun CustomFloatingActionButton(navigateToAddEditScreen: () -> Unit, modifier: Modifier = Modifier) {
     FloatingActionButton(
-        onClick = { navController.navigate(AddItemScreen) },
+        onClick = navigateToAddEditScreen,
         modifier = Modifier.clip(CircleShape)
     ) {
         Icon(
@@ -157,6 +154,7 @@ fun HomeContentScreen(
     homeState: HomeState,
     onCheckChanged: (ToDoCardData, Boolean) -> Unit,
     onDeleteButtonClick: (ToDoCardData) -> Unit,
+    onClickToDoCard: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -179,8 +177,9 @@ fun HomeContentScreen(
             items(homeState.data) {
                 ToDoItemCard(
                     it.isChecked,
-                    { newVal -> onCheckChanged(it, newVal) },
-                    { onDeleteButtonClick(it) },
+                    onCheckChanged = { newVal -> onCheckChanged(it, newVal) },
+                    onDeleteClick = { onDeleteButtonClick(it) },
+                    onTodoCardClick = { onClickToDoCard() },
                     title = it.title,
                     description = it.dateTime,
                     repeatMode = it.repeatMode,
@@ -194,11 +193,10 @@ fun HomeContentScreen(
 @Preview(showSystemUi = true)
 @Composable
 fun PreviewHomeScreen(
-    navController: NavController = rememberNavController(),
     modifier: Modifier = Modifier
 ) {
     TODOListP1Theme {
-        HomeScreen(navController, modifier = modifier)
+        HomeScreen(onAddTaskButtonClick = { }, onClickToDoCard = {}, modifier = modifier)
     }
 }
 
@@ -209,7 +207,9 @@ fun PreviewHomeContentScreen(modifier: Modifier = Modifier) {
         HomeContentScreen(
             HomeState(isLoading = false, isError = false, data = dummyUIStateData()),
             onCheckChanged = { a, b -> Log.d("TAG", "PreviewHomeContentScreen: $a $b") },
-            onDeleteButtonClick = { Log.d("TAG", "PreviewHomeContentScreen: $it") }
+            onDeleteButtonClick = { Log.d("TAG", "PreviewHomeContentScreen: $it") },
+            onClickToDoCard = {},
+            modifier = modifier
         )
     }
 }

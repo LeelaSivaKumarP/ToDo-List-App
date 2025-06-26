@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.compose.navigation)
     implementation(libs.kotlin.serializatin)
     implementation(libs.androidx.constraintlayout.compose)
+    implementation(libs.hilt.navigation.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

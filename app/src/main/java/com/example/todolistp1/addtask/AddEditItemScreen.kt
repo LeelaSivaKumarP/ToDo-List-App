@@ -28,11 +28,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.todolistp1.ui.theme.TODOListP1Theme
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -40,19 +37,19 @@ object AddItemScreen
 
 @Composable
 fun AddItemScreen(
-    navController: NavController,
+    navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: AddItemViewModel = viewModel()
+    viewModel: AddItemViewModel = hiltViewModel<AddItemViewModel>()
 ) {
     val coroutineScope = rememberCoroutineScope()
     var textFieldData by remember { mutableStateOf("") }
     Scaffold(floatingActionButton = {
         SaveFloatingActionButton(onClick = {
             viewModel.addToDB(data = textFieldData)
-            coroutineScope.launch {
-                delay(500)
-                navController.navigateUp()
-            }
+            //TODO: Edge Case, rare but happens.
+            //1. If Viewmodel lifecycle ends before DB operation, coroutine will cancel and DB operation will not be executed.
+            //fix: Listen to the DB operation and upon success, trigger an Event to navigate UP. In-Between show Loader kind of thing.
+            navigateBack()
         })
     }) { innerPadding ->
         Column(modifier = modifier.padding(innerPadding)) {

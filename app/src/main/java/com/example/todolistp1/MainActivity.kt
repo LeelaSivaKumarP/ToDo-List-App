@@ -4,24 +4,17 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-
 import androidx.navigation.compose.rememberNavController
 import com.example.todolistp1.addtask.AddItemScreen
-import com.example.todolistp1.addtask.AddItemViewModel
-import com.example.todolistp1.home.HomeScreen
-import com.example.todolistp1.home.HomeScreenNavArg
-import com.example.todolistp1.home.HomeViewModel
+import com.example.todolistp1.addtask.navigation.navigateAddEditScreen
+import com.example.todolistp1.home.navigation.HomeScreenNavArg
+import com.example.todolistp1.home.navigation.navigateHome
 import com.example.todolistp1.ui.theme.TODOListP1Theme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    val homeViewModel: HomeViewModel by viewModels<HomeViewModel>()
-    val addViewModel: AddItemViewModel by viewModels<AddItemViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,13 +24,11 @@ class MainActivity : ComponentActivity() {
             TODOListP1Theme {
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = HomeScreenNavArg) {
-                    composable<HomeScreenNavArg> {
-                        HomeScreen(navController, homeViewModel)
-                    }
-
-                    composable<AddItemScreen> {
-                        AddItemScreen(navController, viewModel = addViewModel)
-                    }
+                    navigateHome(
+                        onAddTaskButtonClick = { navController.navigate(AddItemScreen) },
+                        onClickToDoCard = { navController.navigate(AddItemScreen) }
+                    )
+                    navigateAddEditScreen(navigateBack = { navController.popBackStack() })
                 }
 
             }

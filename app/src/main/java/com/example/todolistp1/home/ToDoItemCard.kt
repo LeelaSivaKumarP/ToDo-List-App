@@ -1,6 +1,7 @@
-package com.example.todolistp1.presentation
+package com.example.todolistp1.home
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.InlineTextContent
@@ -32,6 +33,7 @@ fun ToDoItemCard(
     checkState: Boolean,
     onCheckChanged: (Boolean) -> Unit,
     onDeleteClick: () -> Unit,
+    onTodoCardClick: () -> Unit,
     title: String,
     modifier: Modifier = Modifier,
     description: String? = null,
@@ -39,7 +41,7 @@ fun ToDoItemCard(
     category: String? = null
 
 ) {
-    ConstraintLayout(modifier = modifier
+    ConstraintLayout(modifier = modifier.clickable{ onTodoCardClick() }
         .fillMaxWidth()
         .border(1.dp, Color.Black)) {
         val (checkButton, titleCon, descriptionCon, detailsCon, deleteButton) = createRefs()
@@ -103,9 +105,10 @@ fun ToDoItemCard(
 fun PreviewToDoItemCard(modifier: Modifier = Modifier) {
     TODOListP1Theme {
         ToDoItemCard(
-            false,
-            {},
-            {},
+            checkState = false,
+            onCheckChanged = {},
+            onDeleteClick = {},
+            onTodoCardClick = {},
             title = "Title",
             description = "Description",
             repeatMode = true,

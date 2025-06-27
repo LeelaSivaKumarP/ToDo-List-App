@@ -13,6 +13,8 @@ class LocalDataStoreImpl @Inject constructor(val myDao: MyDao) : LocalDataStore 
 
     override suspend fun fetchData() = myDao.fetchFromDB()
 
+    override suspend fun getToDoItem(id: Int) = myDao.getToDoItem(id)
+
     override suspend fun updateData(toDoItemDBModel: ToDoItemDBModel): Int {
         myDao.addToDB(toDoItemDBModel)
         return 1

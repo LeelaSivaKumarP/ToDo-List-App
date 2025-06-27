@@ -16,4 +16,7 @@ interface MyDao {
 
     @Query("Select * from todo_items")
     fun fetchFromDB(): Flow<List<ToDoItemDBModel>>
+
+    @Query("Select * from todo_items where id=:id")
+    suspend fun getToDoItem(id: Int): ToDoItemDBModel
 }

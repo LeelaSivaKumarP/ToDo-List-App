@@ -28,7 +28,9 @@ class MainActivity : ComponentActivity() {
                         onAddTaskButtonClick = { navController.navigate(AddItemScreen) },
                         onClickToDoCard = { navController.navigate(AddItemScreen) }
                     )
-                    navigateAddEditScreen(navigateBack = { navController.popBackStack() })
+                    navigateAddEditScreen(
+                        navigateBack = { navController.popBackStack() },
+                        navigateBackButtonClick = { navController.popBackStack() })
                 }
 
             }

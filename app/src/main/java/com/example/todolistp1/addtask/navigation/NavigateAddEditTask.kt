@@ -4,8 +4,14 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.todolistp1.addtask.AddItemScreen
 
-fun NavGraphBuilder.navigateAddEditScreen(navigateBack: () -> Unit) {
+fun NavGraphBuilder.navigateAddEditScreen(
+    navigateBack: () -> Unit,
+    navigateBackButtonClick: () -> Unit
+) {
     composable<AddItemScreen> {
-        AddItemScreen(navigateBack = navigateBack)
+        AddItemScreen(
+            navigateBack = navigateBack,
+            navigateBackButtonClick = navigateBackButtonClick
+        )
     }
 }

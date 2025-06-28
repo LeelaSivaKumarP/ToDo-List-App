@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.todolistp1"
+    namespace = "org.plsk.todolistp1"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.todolistp1"
+        applicationId = "org.plsk.todolistp1"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
@@ -23,7 +23,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

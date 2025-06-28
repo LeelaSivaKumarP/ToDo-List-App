@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
-        android:name=".MyApp"
+        android:name="org.plsk.todolistp1.MyApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -14,7 +14,7 @@
         android:theme="@style/Theme.TODOListP1"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name="org.plsk.todolistp1.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.TODOListP1">
             <intent-filter>

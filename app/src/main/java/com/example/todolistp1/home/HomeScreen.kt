@@ -55,7 +55,7 @@ import com.example.todolistp1.ui.theme.TODOListP1Theme
 @Composable
 fun HomeScreen(
     onAddTaskButtonClick: () -> Unit,
-    onClickToDoCard: () -> Unit,
+    onClickToDoCard: (ToDoCardData) -> Unit,
     viewModel: HomeViewModel = hiltViewModel<HomeViewModel>(),
     modifier: Modifier = Modifier
 ) {
@@ -154,7 +154,7 @@ fun HomeContentScreen(
     homeState: HomeState,
     onCheckChanged: (ToDoCardData, Boolean) -> Unit,
     onDeleteButtonClick: (ToDoCardData) -> Unit,
-    onClickToDoCard: () -> Unit,
+    onClickToDoCard: (ToDoCardData) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -174,16 +174,16 @@ fun HomeContentScreen(
             contentPadding = PaddingValues(all = 5.dp),
             verticalArrangement = Arrangement.spacedBy(space = 5.dp)
         ) {
-            items(homeState.data) {
+            items(homeState.data) { card ->
                 ToDoItemCard(
-                    it.isChecked,
-                    onCheckChanged = { newVal -> onCheckChanged(it, newVal) },
-                    onDeleteClick = { onDeleteButtonClick(it) },
-                    onTodoCardClick = { onClickToDoCard() },
-                    title = it.title,
-                    description = it.dateTime,
-                    repeatMode = it.repeatMode,
-                    category = it.category
+                    card.isChecked,
+                    onCheckChanged = { newVal -> onCheckChanged(card, newVal) },
+                    onDeleteClick = { onDeleteButtonClick(card) },
+                    onTodoCardClick = { onClickToDoCard(card) },
+                    title = card.title,
+                    description = card.dateTime,
+                    repeatMode = card.repeatMode,
+                    category = card.category
                 )
             }
         }

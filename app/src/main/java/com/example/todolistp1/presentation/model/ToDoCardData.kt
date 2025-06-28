@@ -11,16 +11,20 @@ data class ToDoCardData(
     var category: String? = null
 )
 
+fun ToDoListItem.toPresentation(): ToDoCardData {
+    return ToDoCardData(
+        id = this.id,
+        isChecked = this.isChecked,
+        title = this.title,
+        dateTime = this.dateTime,
+        repeatMode = this.repeatMode,
+        category = this.category
+    )
+}
+
 fun List<ToDoListItem>.toPresentationList(): List<ToDoCardData> {
     return this.map {
-        ToDoCardData(
-            id = it.id,
-            isChecked = it.isChecked,
-            title = it.title,
-            dateTime = it.dateTime,
-            repeatMode = it.repeatMode,
-            category = it.category
-        )
+        it.toPresentation()
     }
 }
 

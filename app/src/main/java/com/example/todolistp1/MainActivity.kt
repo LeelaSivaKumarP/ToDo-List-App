@@ -25,8 +25,8 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = HomeScreenNavArg) {
                     navigateHome(
-                        onAddTaskButtonClick = { navController.navigate(AddItemScreen) },
-                        onClickToDoCard = { navController.navigate(AddItemScreen) }
+                        onAddTaskButtonClick = { navController.navigate(AddItemScreen(0)) },
+                        onClickToDoCard = { navController.navigate(AddItemScreen(it.id ?: 0)) }
                     )
                     navigateAddEditScreen(
                         navigateBack = { navController.popBackStack() },

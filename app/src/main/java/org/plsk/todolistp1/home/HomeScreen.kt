@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -24,6 +25,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -57,14 +59,18 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel<HomeViewModel>(),
     modifier: Modifier = Modifier
 ) {
-    val data by viewModel.uiState.collectAsState()
+    val homeState by viewModel.uiState.collectAsState()
     Scaffold(
         floatingActionButton = { CustomFloatingActionButton(onAddTaskButtonClick) },
-        topBar = { CustomTopAppBar() },
+        topBar = {
+            CustomTopAppBar(
+                showOnlyPending = homeState.homeUiData.hidePendingItems,
+                onClickOfShowItems = viewModel::changeStateOfHidePendingItems)
+        },
         modifier = modifier.fillMaxSize()
     ) { padding ->
         HomeContentScreen(
-            data,
+            homeState,
             viewModel::changeStateOfCard,
             viewModel::deleteCard,
             onClickToDoCard,
@@ -76,8 +82,12 @@ fun HomeScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomTopAppBar(modifier: Modifier = Modifier) {
-    var exp by remember { mutableStateOf(false) }
+fun CustomTopAppBar(
+    showOnlyPending: Boolean,
+    onClickOfShowItems: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var expandState by remember { mutableStateOf(false) }
     Box(
         contentAlignment = Alignment.TopCenter, modifier = modifier
             .background(Color.Green)
@@ -94,15 +104,15 @@ fun CustomTopAppBar(modifier: Modifier = Modifier) {
             },
             actions = {
                 IconButton(onClick = {}) { Icon(Icons.Default.Search, contentDescription = null) }
-                IconButton(onClick = { exp = !exp }) {
+                IconButton(onClick = { expandState = !expandState }) {
                     Icon(
                         Icons.Default.MoreVert,
                         contentDescription = null
                     )
                 }
                 DropdownMenu(
-                    expanded = exp,
-                    onDismissRequest = { exp = false },
+                    expanded = expandState,
+                    onDismissRequest = { expandState = false },
 
                     ) {
                     DropdownMenuItem(
@@ -115,13 +125,18 @@ fun CustomTopAppBar(modifier: Modifier = Modifier) {
                 }
             },
             navigationIcon = {
-                Icon(
-                    Icons.Default.CheckCircle,
-                    modifier = Modifier
-                        .padding(start = 10.dp)
-                        .size(35.dp),
-                    contentDescription = null
-                )
+                IconToggleButton(checked = showOnlyPending, onCheckedChange = {
+                    Log.i("TAG", "CustomTopAppBar: ")
+                    onClickOfShowItems(it)
+                }) {
+                    Icon(
+                        if (showOnlyPending) Icons.Outlined.CheckCircle else Icons.Filled.CheckCircle,
+                        modifier = Modifier
+                            .padding(start = 10.dp)
+                            .size(35.dp),
+                        contentDescription = null
+                    )
+                }
             },
             colors = TopAppBarDefaults.topAppBarColors(
                 titleContentColor = Color.White,
@@ -172,7 +187,7 @@ fun HomeContentScreen(
             contentPadding = PaddingValues(all = 5.dp),
             verticalArrangement = Arrangement.spacedBy(space = 5.dp)
         ) {
-            items(homeState.data) { card ->
+            items(homeState.homeUiData.data) { card ->
                 ToDoItemCard(
                     card.isChecked,
                     onCheckChanged = { newVal -> onCheckChanged(card, newVal) },
@@ -203,7 +218,7 @@ fun PreviewHomeScreen(
 fun PreviewHomeContentScreen(modifier: Modifier = Modifier) {
     TODOListP1Theme {
         HomeContentScreen(
-            HomeState(isLoading = false, isError = false, data = dummyUIStateData()),
+            HomeState(isLoading = false, isError = false, homeUiData = dummyUIStateData()),
             onCheckChanged = { a, b -> Log.d("TAG", "PreviewHomeContentScreen: $a $b") },
             onDeleteButtonClick = { Log.d("TAG", "PreviewHomeContentScreen: $it") },
             onClickToDoCard = {},

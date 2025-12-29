@@ -1,5 +1,6 @@
 package org.plsk.todolistp1.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import org.plsk.todolistp1.presentation.model.ToDoCardData
@@ -24,7 +25,7 @@ class HomeViewModel @Inject constructor(
     val deleteToDoDataUseCase: DeleteToDoDataUseCase
 ) : ViewModel() {
     private var _uiState: MutableStateFlow<HomeState> =
-        MutableStateFlow(HomeState().apply { isLoading = true })
+        MutableStateFlow(HomeState(homeUiData = HomeUIData()).apply { isLoading = true })
     var uiState: StateFlow<HomeState> = _uiState
 
     init {
@@ -36,7 +37,8 @@ class HomeViewModel @Inject constructor(
             fetchToDoDataUseCase.invoke().map {
                 it.toPresentationList()
             }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()).collect {
-                _uiState.value = HomeState(data = it)
+                val updatedHomeState = _uiState.value.homeUiData.copy(data = it)
+                _uiState.value = HomeState(homeUiData = updatedHomeState)
             }
 
         }
@@ -54,10 +56,16 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun changeStateOfHidePendingItems(checkState: Boolean) {
+        Log.i("TAG", "changeStateOfHidePendingItems: ")
+        val updatedValue = _uiState.value.homeUiData.copy(hidePendingItems = checkState)
+        _uiState.value = _uiState.value.copy(homeUiData = updatedValue)
+    }
+
 }
 
-fun dummyUIStateData(): List<ToDoCardData> {
-    return buildList {
+fun dummyUIStateData(): HomeUIData {
+    val data = buildList {
         add(ToDoCardData(isChecked = false, title = "Title 1", dateTime = "Description 1"))
         add(ToDoCardData(isChecked = false, title = "Title 2", dateTime = "Description 2"))
         add(ToDoCardData(isChecked = false, title = "Title 3", dateTime = "Description 3"))
@@ -65,8 +73,8 @@ fun dummyUIStateData(): List<ToDoCardData> {
         add(ToDoCardData(isChecked = false, title = "Title 5", dateTime = "Description 5"))
         add(ToDoCardData(isChecked = false, title = "Title 6", dateTime = "Description 6"))
         add(ToDoCardData(isChecked = false, title = "Title 7", dateTime = "Description 7"))
-
     }
+    return HomeUIData(data = data)
 }
 
 

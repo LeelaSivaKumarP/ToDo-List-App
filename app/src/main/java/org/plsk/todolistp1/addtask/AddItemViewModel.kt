@@ -10,6 +10,7 @@ import org.plsk.todolistp1.presentation.usecase.AddToDoItemUseCase
 import org.plsk.todolistp1.presentation.usecase.GetToDoItemByIDUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import org.plsk.todolistp1.home.ToDoItemCard
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,7 +28,7 @@ class AddItemViewModel @Inject constructor(
 
     fun getItem(id: Int) {
         viewModelScope.launch {
-            todoItem.value = getToDoItemByIDUseCase.getItem(id).toPresentation()
+            todoItem.value = getToDoItemByIDUseCase.getItem(id)?.toPresentation() ?: ToDoCardData(title = "")
         }
     }
 }

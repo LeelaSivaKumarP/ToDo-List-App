@@ -2,6 +2,9 @@
 
 name: CI
 
+env: 
+  BUILD_TYPE: You SIVA
+
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "master" branch
@@ -34,3 +37,42 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+  android_build:
+    needs: build
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout Code
+        uses: action/checkout@v4
+
+      - name: Setting Up Java
+        uses: actions/setup-java@v4
+
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: 3. Making Gradle Executable
+        run: chmod +x gradlew
+
+      - name: 4. Building the Project
+        run: ./gradlew assembleDebug
+
+      - name: 5. Saving the APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-app-bundle
+          path: app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 7
+
+        
+        
+
+      
+    
+    
+    
+
+  
+
+    
